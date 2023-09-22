@@ -14,7 +14,7 @@ for article in results:
     articleDict = article.toDict()
     articleList.append(articleDict)
 
-# Generate list of dict records which will hold all article details that could be fetch from PUBMED API
+# Generate list of dict records which will hold all article details that could be fetched from PUBMED API
 for article in articleList:
 #Sometimes article['pubmed_id'] contains list separated with comma - take first pubmedId in that list - thats article pubmedId
     pubmedId = article['pubmed_id'].partition('\n')[0]
