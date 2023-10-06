@@ -8,7 +8,7 @@ df = create_dataframe(data_base_file, kwords_to_list=True)
 
 
 id_list = df['pubmed_id']
-keywords_list = df['keywords']
+keywords_list = df['keywords'] # if keywords, recommit Graph file
 abstracts_list = df['abstract']
 Graph = build_graph(id_list, abstracts_list, drow=False)
 
