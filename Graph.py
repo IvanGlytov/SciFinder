@@ -51,6 +51,7 @@ def build_graph(id_list, keywords_list, drow:bool):
                 break
             weight = weighter_k(first_keywords, second_keywords)
             # weight = torch.mean(weight) раскоммитить в случае использования keywords
+
             weight = weight.item()
             # print(weight)
             G.add_edge(first_id, second_id, weight=weight)
