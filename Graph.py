@@ -4,17 +4,19 @@
 import sqlite3 as sl
 import pandas as pd
 import networkx as nx
+import numpy as np
 import matplotlib.pyplot as plt
 from weighter import *
 import io
 import csv
+import torch
 
 
 def create_dataframe(data_base_file, kwords_to_list:bool):
     # if kwords_to_list == True, convert string of keywords to list
 
     db = sl.connect(data_base_file)
-    df = pd.read_sql_query("SELECT rowid, pubmed_id, keywords FROM SciFinder_data WHERE rowid < 50 AND keywords <> '[]'", db)
+    df = pd.read_sql_query("SELECT rowid, pubmed_id, keywords, abstract FROM SciFinder_data WHERE rowid < 50 AND keywords <> '[]'", db)
     db.close()
     df['keywords'] = df['keywords'].str.replace(', ', ',')
     df['keywords'] = df['keywords'].str.replace('"', '')
@@ -35,7 +37,6 @@ def create_dataframe(data_base_file, kwords_to_list:bool):
                     df['keywords'][idx] = new_row
     return df
 
-print()
 
 # построение графа
 def build_graph(id_list, keywords_list, drow:bool):
@@ -44,11 +45,14 @@ def build_graph(id_list, keywords_list, drow:bool):
     # if drow == True, create matplotlib graph
     G = nx.Graph()
     for first_id, first_keywords in zip(id_list, keywords_list):
-        weight = 0
+        # weight = 0
         for second_id, second_keywords in zip(id_list, keywords_list):
             if first_id == second_id:
                 break
             weight = weighter_k(first_keywords, second_keywords)
+            # weight = torch.mean(weight) раскоммитить в случае использования keywords
+            weight = weight.item()
+            # print(weight)
             G.add_edge(first_id, second_id, weight=weight)
 
     # удаление рёбер с нулевым весом
